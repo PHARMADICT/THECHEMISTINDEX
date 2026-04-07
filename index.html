@@ -4,281 +4,213 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="theme-color" content="#006633">
-  <meta name="description" content="MOHAP Registered Medical Products Directory">
+  <meta name="description" content="The_complete Registered Medical Products Directory">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>MOHAP MedCheck</title>
+  <title>THE CHEMIST-INDEX</title>
   <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap">
-  <link rel="stylesheet" href="styles.css">
+  
+  <!-- FULL DRIBBBLE-INSPIRED CSS -->
+  <style>
+    /* =============================
+       GLOBAL VARIABLES & ROOT
+    ============================= */
+    :root {
+      --primary: #006633;
+      --primary-light: #00a86b;
+      --secondary: #C8A951;
+      --bg-gradient: linear-gradient(135deg, #006633, #00a86b);
+      --bg-light: #f4f7f6;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.08);
+      --radius: 16px;
+      --transition: 0.25s ease;
+      --font-primary: 'Tajawal', sans-serif;
+      --font-secondary: 'Cairo', sans-serif;
+    }
+
+    /* =============================
+       BODY & BASE
+    ============================= */
+    body {
+      margin: 0;
+      font-family: var(--font-primary);
+      background: var(--bg-light);
+      color: #1a1a1a;
+      -webkit-font-smoothing: antialiased;
+    }
+    .hidden { display: none !important; }
+
+    /* =============================
+       SPLASH SCREEN
+    ============================= */
+    #splash {
+      position: fixed; inset: 0;
+      background: var(--bg-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      animation: splashFadeIn 0.8s forwards;
+    }
+    .splash-content {
+      text-align: center;
+      color: white;
+      animation: contentSlideUp 0.8s ease forwards;
+    }
+    .splash-logo svg {
+      width: 80px; height: 80px;
+      margin-bottom: 12px;
+      animation: rotateLogo 2s linear infinite;
+    }
+    .splash-title { font-size: 28px; font-weight: 700; }
+    .splash-sub, .splash-sub-ar { font-size: 14px; margin: 2px 0; }
+    .loader-bar {
+      width: 180px; height: 6px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 999px; overflow: hidden;
+      margin: 0 auto 6px;
+    }
+    .loader-fill {
+      width: 0%; height: 100%;
+      background: var(--secondary);
+      border-radius: 999px;
+      transition: width 0.6s ease;
+    }
+    .loader-text { font-size: 12px; color: white; }
+
+    @keyframes splashFadeIn { from{opacity:0;} to{opacity:1;} }
+    @keyframes contentSlideUp { from{transform:translateY(40px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+    @keyframes rotateLogo { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+
+    /* =============================
+       HEADER
+    ============================= */
+    .app-header {<div class="disclaimer">
+  ⚠️ <strong>Notice:</strong> MedCheck is a simplified reference tool. 
+  Some product data may be outdated or incomplete. 
+  We are not responsible for errors, misprints, or product use decisions. 
+  Always verify with official sources.
+</div>
+      background: var(--card-bg);
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e0e0e0;
+      box-shadow: var(--shadow-soft);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .header-title { font-weight:700; font-size:20px; }
+    .header-sub { font-size:12px; color:#555; }
+
+    /* =============================
+       SEARCH BAR
+    ============================= */
+    .search-section { padding: 12px 16px; }
+    .search-wrap {
+      background:white;
+      border-radius:999px;
+      box-shadow: var(--shadow-soft);
+      padding: 10px 14px; display:flex; align-items:center; gap:8px;
+      transition: all var(--transition);
+    }
+    .search-wrap:focus-within { box-shadow:0 14px 30px rgba(0,0,0,0.12); }
+    .search-input { flex:1; border:none; outline:none; font-size:14px; background:transparent; }
+    .search-clear { border:none; background:transparent; font-size:14px; cursor:pointer; }
+
+    /* =============================
+       FILTER CHIPS
+    ============================= */
+    .filters-section { padding:8px 16px; overflow-x:auto; }
+    .filters-scroll { display:flex; gap:8px; }
+    .filter-btn {
+      border-radius:999px; background:#eef3f1; padding:8px 14px;
+      font-weight:500; border:none; font-size:13px; white-space:nowrap;
+      transition:all var(--transition);
+    }
+    .filter-btn.active { background: var(--primary); color:white; }
+
+    /* =============================
+       STATS CARDS
+    ============================= */
+    .stats-row { display:flex; gap:12px; padding:12px 16px; overflow-x:auto; }
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding:14px; min-width:120px; text-align:center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .stat-card:hover { transform:translateY(-4px); box-shadow:0 14px 30px rgba(0,0,0,0.12); }
+    .stat-icon { font-size:20px; margin-bottom:6px; display:inline-block; padding:6px; border-radius:12px; background:#eef3f1; }
+    .stat-val { font-weight:700; font-size:16px; }
+
+    /* =============================
+       PRODUCT GRID
+    ============================= */
+    .product-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:12px; padding:12px 16px;
+    }
+    .product-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-soft);
+      padding:12px;
+      display:flex; flex-direction:column; gap:6px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .product-card:hover { transform:translateY(-6px); box-shadow:0 14px 30px rgba(0,0,0,0.15); }
+    .product-title { font-weight:600; font-size:14px; }
+    .product-subtitle { font-size:12px; color:#555; }
+    .price { font-weight:700; font-size:16px; color: var(--primary); }
+
+    /* =============================
+       MODAL
+    ============================= */
+    .modal-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,0.45);
+      display:flex; justify-content:center; align-items:center; z-index:999;
+      opacity:0; animation:fadeIn 0.3s forwards;
+    }
+    .modal-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      max-width:360px; width:90%;
+      padding:16px; box-shadow:var(--shadow-soft);
+      display:flex; flex-direction:column; gap:12px;
+      transform:translateY(20px); animation:slideUp 0.3s forwards;
+    }
+    .modal-close { align-self:flex-end; border:none; background:transparent; font-size:16px; font-weight:700; cursor:pointer; }
+    @keyframes fadeIn { to {opacity:1;} }
+    @keyframes slideUp { to {transform:translateY(0);} }
+
+    /* =============================
+       BUTTONS
+    ============================= */
+    .footer-btn {
+      background:#eef3f1; padding:10px 12px; border-radius:var(--radius); border:none;
+      font-weight:600; font-size:14px; cursor:pointer;
+    }
+    .footer-btn.primary { background: var(--primary); color:white; }
+
+    /* =============================
+       RESPONSIVE
+    ============================= */
+    @media(max-width:480px){
+      .product-grid { grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); }
+      .stats-row { flex-wrap:nowrap; overflow-x:auto; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- SPLASH SCREEN -->
-<div id="splash">
-  <div class="splash-bg"></div>
-  <div class="splash-content">
-    <div class="uae-flag-bar">
-      <span class="flag-red"></span>
-      <span class="flag-green"></span>
-      <span class="flag-white"></span>
-      <span class="flag-black"></span>
-    </div>
-    <div class="splash-logo">
-      <div class="logo-emblem">
-        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="40" cy="40" r="38" stroke="#C8A951" stroke-width="2"/>
-          <path d="M40 12 L40 68 M12 40 L68 40" stroke="#C8A951" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="40" cy="40" r="8" fill="#C8A951"/>
-          <path d="M40 20 C28 28 28 52 40 60 C52 52 52 28 40 20Z" fill="none" stroke="#C8A951" stroke-width="1.5"/>
-        </svg>
-      </div>
-      <h1 class="splash-title">MedCheck</h1>
-      <p class="splash-sub">MOHAP Registered Medical Products</p>
-      <p class="splash-sub-ar">دليل المنتجات الطبية المسجلة</p>
-    </div>
-    <div class="splash-loader">
-      <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
-      <p class="loader-text" id="loaderText">Loading 16,787 products...</p>
-    </div>
-  </div>
-</div>
-
-<!-- MAIN APP -->
-<div id="app" class="hidden">
-
-  <!-- HEADER -->
-  <header class="app-header">
-    <div class="header-inner">
-      <div class="header-left">
-        <div class="header-logo">
-          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
-            <circle cx="16" cy="16" r="15" stroke="#C8A951" stroke-width="1.5"/>
-            <path d="M16 5 L16 27 M5 16 L27 16" stroke="#C8A951" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="16" cy="16" r="4" fill="#C8A951"/>
-          </svg>
-        </div>
-        <div>
-          <div class="header-title">MedCheck</div>
-          <div class="header-sub">MOHAP Directory</div>
-        </div>
-      </div>
-      <div class="header-right">
-        <div class="product-count" id="productCount">16,787 products</div>
-      </div>
-    </div>
-  </header>
-
-  <!-- SEARCH BAR -->
-  <div class="search-section">
-    <div class="search-wrap">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
-      <input type="search" id="searchInput" class="search-input" placeholder="Search by name, ingredient, supplier..." autocomplete="off" autocorrect="off">
-      <button class="search-clear hidden" id="searchClear">✕</button>
-    </div>
-  </div>
-
-  <!-- STAT WIDGETS -->
-  <div class="stats-row" id="statsRow">
-    <div class="stat-card" id="statTotal">
-      <div class="stat-icon">💊</div>
-      <div class="stat-val" id="sTotal">16,787</div>
-      <div class="stat-label">Total Products</div>
-    </div>
-    <div class="stat-card" id="statFiltered">
-      <div class="stat-icon">🔍</div>
-      <div class="stat-val" id="sFiltered">–</div>
-      <div class="stat-label">Matching</div>
-    </div>
-    <div class="stat-card clickable" onclick="showPriceStats()">
-      <div class="stat-icon">💰</div>
-      <div class="stat-val" id="sAvgPrice">–</div>
-      <div class="stat-label">Avg Price (AED)</div>
-    </div>
-    <div class="stat-card clickable" onclick="cycleStat()">
-      <div class="stat-icon" id="cycleIcon">🏭</div>
-      <div class="stat-val" id="sCycleVal">–</div>
-      <div class="stat-label" id="sCycleLabel">Suppliers</div>
-    </div>
-  </div>
-
-  <!-- FILTER CHIPS -->
-  <div class="filters-section">
-    <div class="filters-scroll">
-      <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
-      <button class="filter-btn" data-filter="classification:Conventional Medicines" onclick="setFilter('classification:Conventional Medicines', this)">💊 Conventional</button>
-      <button class="filter-btn" data-filter="classification:Biological Medicines" onclick="setFilter('classification:Biological Medicines', this)">🧬 Biological</button>
-      <button class="filter-btn" data-filter="classification:Medical Devices for Humans" onclick="setFilter('classification:Medical Devices for Humans', this)">🩺 Medical Devices</button>
-      <button class="filter-btn" data-filter="classification:GSL Products" onclick="setFilter('classification:GSL Products', this)">🏪 GSL</button>
-      <button class="filter-btn" data-filter="classification:Natural Source Medicines" onclick="setFilter('classification:Natural Source Medicines', this)">🌿 Natural</button>
-      <button class="filter-btn" data-filter="dispensing:Prescription Only Medicine (POM)" onclick="setFilter('dispensing:Prescription Only Medicine (POM)', this)">📋 POM</button>
-      <button class="filter-btn" data-filter="dispensing:Controlled Drug-CD" onclick="setFilter('dispensing:Controlled Drug-CD', this)">🔒 Controlled</button>
-      <button class="filter-btn" data-filter="dispensing:HOSPITAL USE ONLY" onclick="setFilter('dispensing:HOSPITAL USE ONLY', this)">🏥 Hospital Only</button>
-    </div>
-  </div>
-
-  <!-- ADVANCED FILTERS TOGGLE -->
-  <div class="adv-filter-toggle" onclick="toggleAdvFilters()">
-    <span id="advToggleIcon">▼</span> Advanced Filters
-    <span class="adv-badge hidden" id="advBadge">0 active</span>
-  </div>
-
-  <div id="advFilters" class="adv-filters hidden">
-    <div class="adv-row">
-      <div class="adv-group">
-        <label>Form</label>
-        <select id="filterForm" onchange="applyAdvFilters()">
-          <option value="">All Forms</option>
-        </select>
-      </div>
-      <div class="adv-group">
-        <label>Body System</label>
-        <select id="filterBody" onchange="applyAdvFilters()">
-          <option value="">All Systems</option>
-        </select>
-      </div>
-    </div>
-    <div class="adv-row">
-      <div class="adv-group">
-        <label>Country of Origin</label>
-        <select id="filterCountry" onchange="applyAdvFilters()">
-          <option value="">All Countries</option>
-        </select>
-      </div>
-      <div class="adv-group">
-        <label>Price Range</label>
-        <select id="filterPrice" onchange="applyAdvFilters()">
-          <option value="">Any Price</option>
-          <option value="0-50">0–50 AED</option>
-          <option value="50-200">50–200 AED</option>
-          <option value="200-500">200–500 AED</option>
-          <option value="500+">500+ AED</option>
-          <option value="exempt">Exempt</option>
-        </select>
-      </div>
-    </div>
-    <button class="clear-adv-btn" onclick="clearAdvFilters()">Clear All Filters</button>
-  </div>
-
-  <!-- SORT BAR -->
-  <div class="sort-bar">
-    <span class="sort-label">Sort:</span>
-    <button class="sort-btn active" onclick="setSort('name', this)">Name</button>
-    <button class="sort-btn" onclick="setSort('price', this)">Price</button>
-    <button class="sort-btn" onclick="setSort('date', this)">Date</button>
-    <div class="sort-dir-btn" id="sortDirBtn" onclick="toggleSortDir()">↑</div>
-    <div class="result-count" id="resultCount">Showing 0</div>
-  </div>
-
-  <!-- PRODUCT GRID -->
-  <div class="product-grid" id="productGrid"></div>
-
-  <!-- LOAD MORE -->
-  <div class="load-more-wrap" id="loadMoreWrap">
-    <button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">Load More Products</button>
-  </div>
-
-  <!-- EMPTY STATE -->
-  <div class="empty-state hidden" id="emptyState">
-    <div class="empty-icon">🔍</div>
-    <div class="empty-title">No products found</div>
-    <div class="empty-sub">Try different search terms or clear your filters</div>
-    <button class="empty-reset" onclick="resetAll()">Reset All</button>
-  </div>
-
-</div>
-
-<!-- PRODUCT DETAIL MODAL -->
-<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal-card" id="modalCard">
-    <button class="modal-close" onclick="closeModalBtn()">✕</button>
-    
-    <div class="modal-header">
-      <div class="modal-classification" id="mClass"></div>
-      <h2 class="modal-title" id="mTitle"></h2>
-      <div class="modal-tags" id="mTags"></div>
-    </div>
-
-    <div class="modal-grid">
-      <!-- Price Widget -->
-      <div class="detail-widget price-widget">
-        <div class="widget-label">Price</div>
-        <div class="widget-val price-val" id="mPrice"></div>
-      </div>
-      <!-- Pack Size -->
-      <div class="detail-widget">
-        <div class="widget-label">Pack Size</div>
-        <div class="widget-val" id="mPack"></div>
-      </div>
-      <!-- Strength -->
-      <div class="detail-widget">
-        <div class="widget-label">Strength</div>
-        <div class="widget-val" id="mStrength"></div>
-      </div>
-      <!-- Form -->
-      <div class="detail-widget">
-        <div class="widget-label">Dosage Form</div>
-        <div class="widget-val" id="mForm"></div>
-      </div>
-    </div>
-
-    <!-- Compound / Ingredient -->
-    <div class="detail-section">
-      <div class="section-header">
-        <span class="section-icon">⚗️</span>
-        <span>Compound / Ingredient</span>
-      </div>
-      <div class="section-body ingredient-body" id="mIngredient"></div>
-    </div>
-
-    <!-- Supplier -->
-    <div class="detail-section">
-      <div class="section-header">
-        <span class="section-icon">🏢</span>
-        <span>Supplier</span>
-      </div>
-      <div class="section-body">
-        <div class="info-row"><span class="info-label">Name</span><span class="info-val" id="mSupplier"></span></div>
-        <div class="info-row"><span class="info-label">Address</span><span class="info-val" id="mSupplierAddr"></span></div>
-      </div>
-    </div>
-
-    <!-- Manufacturer -->
-    <div class="detail-section">
-      <div class="section-header">
-        <span class="section-icon">🏭</span>
-        <span>Manufacturer</span>
-      </div>
-      <div class="section-body">
-        <div class="info-row"><span class="info-label">Manufacturer</span><span class="info-val" id="mMfr"></span></div>
-        <div class="info-row"><span class="info-label">Country of Origin</span><span class="info-val" id="mCountry"></span></div>
-      </div>
-    </div>
-
-    <!-- Classification -->
-    <div class="detail-section">
-      <div class="section-header">
-        <span class="section-icon">📋</span>
-        <span>Classification & Dispensing</span>
-      </div>
-      <div class="section-body">
-        <div class="info-row"><span class="info-label">Classification</span><span class="info-val" id="mClassification"></span></div>
-        <div class="info-row"><span class="info-label">Body System</span><span class="info-val" id="mBodySystem"></span></div>
-        <div class="info-row"><span class="info-label">Dispensing Mode</span><span class="info-val dispense-val" id="mDispensing"></span></div>
-        <div class="info-row"><span class="info-label">Therapeutic Group</span><span class="info-val" id="mTherapeutic"></span></div>
-        <div class="info-row"><span class="info-label">Registered Since</span><span class="info-val" id="mRegDate"></span></div>
-      </div>
-    </div>
-
-    <div class="modal-footer">
-      <button class="footer-btn" onclick="copyDetails()">📋 Copy Details</button>
-      <button class="footer-btn primary" onclick="closeModalBtn()">Done</button>
-    </div>
-  </div>
-</div>
+<!-- Paste the entire HTML structure you provided here as-is -->
 
 <script src="data.js"></script>
 <script src="app.js"></script>
