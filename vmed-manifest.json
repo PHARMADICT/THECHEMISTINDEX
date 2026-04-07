@@ -1,0 +1,12 @@
+{
+  "name": "VMED.index",
+  "short_name": "VMED",
+  "description": "MOHAP Registered Medical Products Directory — By Vysakh Chandran",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#0d1f1d",
+  "background_color": "#0d1f1d",
+  "categories": ["medical","health"],
+  "lang": "en"
+}

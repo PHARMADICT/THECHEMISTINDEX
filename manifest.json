@@ -1,0 +1,21 @@
+{
+  "name": "MOHAP MedCheck",
+  "short_name": "MedCheck",
+  "description": "MOHAP Registered Medical Products Directory",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#004D2C",
+  "background_color": "#004D2C",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%23004D2C' rx='32'/><circle cx='96' cy='96' r='70' stroke='%23C8A951' stroke-width='4' fill='none'/><path d='M96 40 L96 152 M40 96 L152 96' stroke='%23C8A951' stroke-width='6' stroke-linecap='round'/><circle cx='96' cy='96' r='18' fill='%23C8A951'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "health"],
+  "lang": "en",
+  "dir": "ltr"
+}

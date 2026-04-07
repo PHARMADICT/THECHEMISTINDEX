@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#006633">
+  <meta name="description" content="MOHAP Registered Medical Products Directory">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>MOHAP MedCheck</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-bg"></div>
+  <div class="splash-content">
+    <div class="uae-flag-bar">
+      <span class="flag-red"></span>
+      <span class="flag-green"></span>
+      <span class="flag-white"></span>
+      <span class="flag-black"></span>
+    </div>
+    <div class="splash-logo">
+      <div class="logo-emblem">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="38" stroke="#C8A951" stroke-width="2"/>
+          <path d="M40 12 L40 68 M12 40 L68 40" stroke="#C8A951" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="40" cy="40" r="8" fill="#C8A951"/>
+          <path d="M40 20 C28 28 28 52 40 60 C52 52 52 28 40 20Z" fill="none" stroke="#C8A951" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <h1 class="splash-title">MedCheck</h1>
+      <p class="splash-sub">MOHAP Registered Medical Products</p>
+      <p class="splash-sub-ar">دليل المنتجات الطبية المسجلة</p>
+    </div>
+    <div class="splash-loader">
+      <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+      <p class="loader-text" id="loaderText">Loading 16,787 products...</p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="header-logo">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+            <circle cx="16" cy="16" r="15" stroke="#C8A951" stroke-width="1.5"/>
+            <path d="M16 5 L16 27 M5 16 L27 16" stroke="#C8A951" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="16" cy="16" r="4" fill="#C8A951"/>
+          </svg>
+        </div>
+        <div>
+          <div class="header-title">MedCheck</div>
+          <div class="header-sub">MOHAP Directory</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="product-count" id="productCount">16,787 products</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SEARCH BAR -->
+  <div class="search-section">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="search" id="searchInput" class="search-input" placeholder="Search by name, ingredient, supplier..." autocomplete="off" autocorrect="off">
+      <button class="search-clear hidden" id="searchClear">✕</button>
+    </div>
+  </div>
+
+  <!-- STAT WIDGETS -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card" id="statTotal">
+      <div class="stat-icon">💊</div>
+      <div class="stat-val" id="sTotal">16,787</div>
+      <div class="stat-label">Total Products</div>
+    </div>
+    <div class="stat-card" id="statFiltered">
+      <div class="stat-icon">🔍</div>
+      <div class="stat-val" id="sFiltered">–</div>
+      <div class="stat-label">Matching</div>
+    </div>
+    <div class="stat-card clickable" onclick="showPriceStats()">
+      <div class="stat-icon">💰</div>
+      <div class="stat-val" id="sAvgPrice">–</div>
+      <div class="stat-label">Avg Price (AED)</div>
+    </div>
+    <div class="stat-card clickable" onclick="cycleStat()">
+      <div class="stat-icon" id="cycleIcon">🏭</div>
+      <div class="stat-val" id="sCycleVal">–</div>
+      <div class="stat-label" id="sCycleLabel">Suppliers</div>
+    </div>
+  </div>
+
+  <!-- FILTER CHIPS -->
+  <div class="filters-section">
+    <div class="filters-scroll">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" data-filter="classification:Conventional Medicines" onclick="setFilter('classification:Conventional Medicines', this)">💊 Conventional</button>
+      <button class="filter-btn" data-filter="classification:Biological Medicines" onclick="setFilter('classification:Biological Medicines', this)">🧬 Biological</button>
+      <button class="filter-btn" data-filter="classification:Medical Devices for Humans" onclick="setFilter('classification:Medical Devices for Humans', this)">🩺 Medical Devices</button>
+      <button class="filter-btn" data-filter="classification:GSL Products" onclick="setFilter('classification:GSL Products', this)">🏪 GSL</button>
+      <button class="filter-btn" data-filter="classification:Natural Source Medicines" onclick="setFilter('classification:Natural Source Medicines', this)">🌿 Natural</button>
+      <button class="filter-btn" data-filter="dispensing:Prescription Only Medicine (POM)" onclick="setFilter('dispensing:Prescription Only Medicine (POM)', this)">📋 POM</button>
+      <button class="filter-btn" data-filter="dispensing:Controlled Drug-CD" onclick="setFilter('dispensing:Controlled Drug-CD', this)">🔒 Controlled</button>
+      <button class="filter-btn" data-filter="dispensing:HOSPITAL USE ONLY" onclick="setFilter('dispensing:HOSPITAL USE ONLY', this)">🏥 Hospital Only</button>
+    </div>
+  </div>
+
+  <!-- ADVANCED FILTERS TOGGLE -->
+  <div class="adv-filter-toggle" onclick="toggleAdvFilters()">
+    <span id="advToggleIcon">▼</span> Advanced Filters
+    <span class="adv-badge hidden" id="advBadge">0 active</span>
+  </div>
+
+  <div id="advFilters" class="adv-filters hidden">
+    <div class="adv-row">
+      <div class="adv-group">
+        <label>Form</label>
+        <select id="filterForm" onchange="applyAdvFilters()">
+          <option value="">All Forms</option>
+        </select>
+      </div>
+      <div class="adv-group">
+        <label>Body System</label>
+        <select id="filterBody" onchange="applyAdvFilters()">
+          <option value="">All Systems</option>
+        </select>
+      </div>
+    </div>
+    <div class="adv-row">
+      <div class="adv-group">
+        <label>Country of Origin</label>
+        <select id="filterCountry" onchange="applyAdvFilters()">
+          <option value="">All Countries</option>
+        </select>
+      </div>
+      <div class="adv-group">
+        <label>Price Range</label>
+        <select id="filterPrice" onchange="applyAdvFilters()">
+          <option value="">Any Price</option>
+          <option value="0-50">0–50 AED</option>
+          <option value="50-200">50–200 AED</option>
+          <option value="200-500">200–500 AED</option>
+          <option value="500+">500+ AED</option>
+          <option value="exempt">Exempt</option>
+        </select>
+      </div>
+    </div>
+    <button class="clear-adv-btn" onclick="clearAdvFilters()">Clear All Filters</button>
+  </div>
+
+  <!-- SORT BAR -->
+  <div class="sort-bar">
+    <span class="sort-label">Sort:</span>
+    <button class="sort-btn active" onclick="setSort('name', this)">Name</button>
+    <button class="sort-btn" onclick="setSort('price', this)">Price</button>
+    <button class="sort-btn" onclick="setSort('date', this)">Date</button>
+    <div class="sort-dir-btn" id="sortDirBtn" onclick="toggleSortDir()">↑</div>
+    <div class="result-count" id="resultCount">Showing 0</div>
+  </div>
+
+  <!-- PRODUCT GRID -->
+  <div class="product-grid" id="productGrid"></div>
+
+  <!-- LOAD MORE -->
+  <div class="load-more-wrap" id="loadMoreWrap">
+    <button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">Load More Products</button>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state hidden" id="emptyState">
+    <div class="empty-icon">🔍</div>
+    <div class="empty-title">No products found</div>
+    <div class="empty-sub">Try different search terms or clear your filters</div>
+    <button class="empty-reset" onclick="resetAll()">Reset All</button>
+  </div>
+
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-card" id="modalCard">
+    <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    
+    <div class="modal-header">
+      <div class="modal-classification" id="mClass"></div>
+      <h2 class="modal-title" id="mTitle"></h2>
+      <div class="modal-tags" id="mTags"></div>
+    </div>
+
+    <div class="modal-grid">
+      <!-- Price Widget -->
+      <div class="detail-widget price-widget">
+        <div class="widget-label">Price</div>
+        <div class="widget-val price-val" id="mPrice"></div>
+      </div>
+      <!-- Pack Size -->
+      <div class="detail-widget">
+        <div class="widget-label">Pack Size</div>
+        <div class="widget-val" id="mPack"></div>
+      </div>
+      <!-- Strength -->
+      <div class="detail-widget">
+        <div class="widget-label">Strength</div>
+        <div class="widget-val" id="mStrength"></div>
+      </div>
+      <!-- Form -->
+      <div class="detail-widget">
+        <div class="widget-label">Dosage Form</div>
+        <div class="widget-val" id="mForm"></div>
+      </div>
+    </div>
+
+    <!-- Compound / Ingredient -->
+    <div class="detail-section">
+      <div class="section-header">
+        <span class="section-icon">⚗️</span>
+        <span>Compound / Ingredient</span>
+      </div>
+      <div class="section-body ingredient-body" id="mIngredient"></div>
+    </div>
+
+    <!-- Supplier -->
+    <div class="detail-section">
+      <div class="section-header">
+        <span class="section-icon">🏢</span>
+        <span>Supplier</span>
+      </div>
+      <div class="section-body">
+        <div class="info-row"><span class="info-label">Name</span><span class="info-val" id="mSupplier"></span></div>
+        <div class="info-row"><span class="info-label">Address</span><span class="info-val" id="mSupplierAddr"></span></div>
+      </div>
+    </div>
+
+    <!-- Manufacturer -->
+    <div class="detail-section">
+      <div class="section-header">
+        <span class="section-icon">🏭</span>
+        <span>Manufacturer</span>
+      </div>
+      <div class="section-body">
+        <div class="info-row"><span class="info-label">Manufacturer</span><span class="info-val" id="mMfr"></span></div>
+        <div class="info-row"><span class="info-label">Country of Origin</span><span class="info-val" id="mCountry"></span></div>
+      </div>
+    </div>
+
+    <!-- Classification -->
+    <div class="detail-section">
+      <div class="section-header">
+        <span class="section-icon">📋</span>
+        <span>Classification & Dispensing</span>
+      </div>
+      <div class="section-body">
+        <div class="info-row"><span class="info-label">Classification</span><span class="info-val" id="mClassification"></span></div>
+        <div class="info-row"><span class="info-label">Body System</span><span class="info-val" id="mBodySystem"></span></div>
+        <div class="info-row"><span class="info-label">Dispensing Mode</span><span class="info-val dispense-val" id="mDispensing"></span></div>
+        <div class="info-row"><span class="info-label">Therapeutic Group</span><span class="info-val" id="mTherapeutic"></span></div>
+        <div class="info-row"><span class="info-label">Registered Since</span><span class="info-val" id="mRegDate"></span></div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="footer-btn" onclick="copyDetails()">📋 Copy Details</button>
+      <button class="footer-btn primary" onclick="closeModalBtn()">Done</button>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
