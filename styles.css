@@ -4,9 +4,9 @@
    ===================================================== */
 
 :root {
-  --green-dark: #004D2C;
+  --green-dark: #006633;
   --green-mid:  #006633;
-  --green-light:#008A44;
+  --green-light:#00a86b;
   --green-pale: #E8F4EE;
   --gold:       #C8A951;
   --gold-light: #E5C97B;
@@ -15,7 +15,7 @@
   --navy:       #0A1628;
   --navy-mid:   #1A2E50;
   --white:      #FFFFFF;
-  --off-white:  #F7F9F7;
+  --off-white:  #F4F7F6;
   --border:     #D8E8DE;
   --text-main:  #1A2E1A;
   --text-muted: #5A7560;
@@ -23,8 +23,11 @@
   --shadow-sm:  0 1px 4px rgba(0,77,44,.10);
   --shadow-md:  0 4px 16px rgba(0,77,44,.14);
   --shadow-lg:  0 8px 32px rgba(0,77,44,.18);
-  --radius:     12px;
-  --radius-lg:  20px;
+  --bg-gradient: linear-gradient(135deg, #006633, #00a86b);
+  --card-bg: rgba(255,255,255,.92);
+  --shadow-soft: 0 10px 25px rgba(0,0,0,.08);
+  --radius:     16px;
+  --radius-lg:  22px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -96,9 +99,9 @@ html, body {
 
 /* ── HEADER ─────────────────────────────────── */
 .app-header {
-  background: var(--green-dark);
+  background: var(--bg-gradient);
   position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 2px 12px rgba(0,0,0,.25);
+  box-shadow: var(--shadow-soft);
 }
 .header-inner {
   display: flex; align-items: center; justify-content: space-between;
@@ -119,11 +122,15 @@ html, body {
 
 /* ── SEARCH ─────────────────────────────────── */
 .search-section {
-  background: var(--green-dark);
-  padding: 0 1rem .75rem;
+  background: transparent;
+  padding: .65rem 1rem .75rem;
 }
 .search-wrap {
   position: relative; max-width: 1200px; margin: 0 auto;
+  background: var(--white);
+  border-radius: 999px;
+  box-shadow: var(--shadow-soft);
+  padding: .05rem 0;
 }
 .search-icon {
   position: absolute; left: .85rem; top: 50%; transform: translateY(-50%);
@@ -131,26 +138,25 @@ html, body {
 }
 .search-input {
   width: 100%; padding: .7rem 2.5rem .7rem 2.75rem;
-  background: rgba(255,255,255,.1);
-  border: 1.5px solid rgba(255,255,255,.15);
-  border-radius: 50px; color: var(--white);
+  background: transparent;
+  border: none;
+  border-radius: 50px; color: var(--text-main);
   font-family: 'Cairo', sans-serif; font-size: .95rem;
   outline: none; transition: all .2s;
 }
-.search-input::placeholder { color: rgba(255,255,255,.45); }
+.search-input::placeholder { color: var(--text-light); }
 .search-input:focus {
-  background: rgba(255,255,255,.15);
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(200,169,81,.2);
+  background: transparent;
+  box-shadow: none;
 }
 .search-clear {
   position: absolute; right: .85rem; top: 50%; transform: translateY(-50%);
-  background: rgba(255,255,255,.2); border: none; color: var(--white);
+  background: var(--green-pale); border: none; color: var(--green-dark);
   width: 22px; height: 22px; border-radius: 50%; cursor: pointer;
   font-size: .7rem; display: flex; align-items: center; justify-content: center;
   transition: background .2s;
 }
-.search-clear:hover { background: rgba(255,255,255,.35); }
+.search-clear:hover { background: #dbeee5; }
 
 /* ── STATS WIDGETS ──────────────────────────── */
 .stats-row {
@@ -159,14 +165,14 @@ html, body {
   max-width: 1200px; margin: 0 auto;
 }
 .stat-card {
-  background: var(--white); border-radius: var(--radius);
-  padding: .75rem .5rem; text-align: center;
-  box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+  background: var(--card-bg); border-radius: var(--radius);
+  padding: .8rem .6rem; text-align: center;
+  box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,.8);
   transition: transform .15s, box-shadow .15s;
 }
 .stat-card.clickable { cursor: pointer; }
 .stat-card.clickable:hover {
-  transform: translateY(-2px); box-shadow: var(--shadow-md);
+  transform: translateY(-4px); box-shadow: 0 14px 30px rgba(0,0,0,.12);
 }
 .stat-icon { font-size: 1.2rem; margin-bottom: .2rem; }
 .stat-val {
@@ -187,13 +193,13 @@ html, body {
 .filter-btn {
   flex-shrink: 0; padding: .35rem .8rem;
   border-radius: 50px; border: 1.5px solid var(--border);
-  background: var(--white); color: var(--text-muted);
+  background: #eef3f1; color: var(--text-muted);
   font-family: 'Cairo', sans-serif; font-size: .78rem; font-weight: 600;
   cursor: pointer; transition: all .2s; white-space: nowrap;
 }
 .filter-btn:hover { border-color: var(--green-mid); color: var(--green-mid); }
 .filter-btn.active {
-  background: var(--green-dark); border-color: var(--green-dark);
+  background: var(--green-mid); border-color: var(--green-mid);
   color: var(--white);
 }
 
@@ -263,16 +269,17 @@ html, body {
 }
 
 .product-card {
-  background: var(--white); border-radius: var(--radius);
-  box-shadow: var(--shadow-sm); border: 1px solid var(--border);
+  background: var(--card-bg); border-radius: var(--radius);
+  box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,.85);
+  backdrop-filter: blur(10px);
   padding: 1rem; cursor: pointer;
   transition: transform .15s, box-shadow .15s, border-color .15s;
   position: relative; overflow: hidden;
   animation: cardIn .2s ease-out;
 }
 .product-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0,0,0,.12);
   border-color: var(--green-light);
 }
 .product-card::before {
@@ -295,8 +302,8 @@ html, body {
   line-height: 1.35; flex: 1;
 }
 .card-price {
-  font-size: .9rem; font-weight: 700; color: var(--green-dark);
-  white-space: nowrap; background: var(--green-pale);
+  font-size: 1rem; font-weight: 700; color: var(--green-dark);
+  white-space: nowrap; background: #e7f6ef;
   padding: .2rem .5rem; border-radius: 6px; font-family: 'Cairo', sans-serif;
 }
 .card-price.exempt { color: var(--text-muted); background: var(--off-white); font-size: .75rem; }
