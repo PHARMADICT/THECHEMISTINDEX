@@ -4,22 +4,19 @@
    ===================================================== */
 
 :root {
-  --green-dark: #006633;
-  --green-mid:  #006633;
-  --green-light:#00a86b;
-  --green-pale: #E8F4EE;
-  --gold:       #C8A951;
-  --gold-light: #E5C97B;
-  --gold-pale:  #FBF5E6;
-  --red-uae:    #CE1126;
-  --navy:       #0A1628;
-  --navy-mid:   #1A2E50;
-  --white:      #FFFFFF;
-  --off-white:  #F4F7F6;
-  --border:     #D8E8DE;
-  --text-main:  #1A2E1A;
-  --text-muted: #5A7560;
-  --text-light: #8FA895;
+  --primary: #2D6CDF;        /* main blue */
+  --primary-light: #4C84FF;
+  --primary-soft: #EAF1FF;
+
+  --secondary: #1E3A8A;      /* deep blue */
+  --accent: #00C6A7;         /* teal accent */
+
+  --bg-main: #F4F8FF;        /* background */
+  --card-bg: #FFFFFF;
+
+  --text-main: #1E2A44;
+  --text-muted: #6B7A99;
+  --text-light: #9AA8C7;
   --shadow-sm:  0 1px 4px rgba(0,77,44,.10);
   --shadow-md:  0 4px 16px rgba(0,77,44,.14);
   --shadow-lg:  0 8px 32px rgba(0,77,44,.18);
@@ -29,9 +26,7 @@
   --radius:     16px;
   --radius-lg:  22px;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 html, body {
   font-family: 'Cairo', 'Tajawal', sans-serif;
   background: var(--off-white);
