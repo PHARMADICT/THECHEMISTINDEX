@@ -1,291 +1,39 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <meta name="theme-color" content="#2D6CDF">
-  <meta name="description" content="Chemist.index — Medical Products Directory">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Chemist.index</title>
-  <link rel="manifest" href="vmed-manifest.json">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+// Update product count display
+function updateProductCount(total, filtered) {
+  const countNum = document.getElementById('countNum');
+  const productCount = document.getElementById('productCount');
+  
+  if (countNum) {
+    // Animate the number change
+    const currentCount = parseInt(countNum.textContent) || 0;
+    const targetCount = total || 0;
+    animateCount(countNum, currentCount, targetCount);
+  }
+  
+  // Update stat cards
+  document.getElementById('sTotal').textContent = total ? total.toLocaleString() : '–';
+  document.getElementById('sFiltered').textContent = filtered ? filtered.toLocaleString() : '–';
+}
 
-<div id="splash">
-  <div class="splash-bg"></div>
-  <div class="splash-content">
-    <div class="uae-flag-bar">
-      <span class="flag-red"></span>
-      <span class="flag-green"></span>
-      <span class="flag-white"></span>
-      <span class="flag-black"></span>
-    </div>
+// Smooth number animation
+function animateCount(element, start, end) {
+  const duration = 800;
+  const startTime = performance.now();
+  
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3); // ease-out
+    const current = Math.floor(start + (end - start) * eased);
+    element.textContent = current.toLocaleString();
+    
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    }
+  }
+  
+  requestAnimationFrame(update);
+}
 
-    <div class="splash-logo">
-      <svg class="logo-emblem" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="60" cy="60" r="52" stroke="#FFFFFF" stroke-width="2" opacity=".35"/>
-        <circle cx="60" cy="60" r="34" stroke="#FFFFFF" stroke-width="1.5" opacity=".6"/>
-        <path d="M60 24v72M24 60h72" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
-        <circle cx="60" cy="60" r="8" fill="#FFFFFF"/>
-      </svg>
-      <h1 class="splash-title">Chemist.index</h1>
-      <p class="splash-sub">The Registered Product Directory</p>
-      <p class="splash-sub-ar">دليل المنتجات الطبية المسجلة</p>
-    </div>
-
-    <div class="splash-loader">
-      <div class="loader-bar">
-        <div class="loader-fill" id="loaderFill"></div>
-      </div>
-      <p class="loader-text" id="loaderText">Loading product database...</p>
-    </div>
-  </div>
-</div>
-
-<div id="app" class="hidden">
-  <header class="app-header">
-    <div class="header-inner">
-      <div class="header-left">
-        <svg class="header-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="14" stroke="#FFFFFF" stroke-width="1.4" opacity=".8"/>
-          <path d="M16 7v18M7 16h18" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/>
-          <circle cx="16" cy="16" r="3" fill="#FFFFFF"/>
-        </svg>
-        <div>
-          <div class="header-title">Chemist.index</div>
-          <div class="header-sub">Medicine & Device Price Registry_by_Vysakh</div>
-        </div>
-      </div>
-      <div class="product-count" id="productCount">Loading...</div>
-    </div>
-
-    <section class="search-section">
-      <div class="search-wrap">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="7"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input
-          type="search"
-          id="searchInput"
-          class="search-input"
-          placeholder="Search by name, ingredient, supplier..."
-          autocomplete="off"
-          autocorrect="off"
-        >
-        <button class="search-clear hidden" id="searchClear">✕</button>
-      </div>
-    </section>
-  </header>
-
-  <div class="stats-row" id="statsRow">
-    <div class="stat-card" id="statTotal">
-      <div class="stat-icon">📦</div>
-      <div class="stat-val" id="sTotal">–</div>
-      <div class="stat-label">Total Products</div>
-    </div>
-
-    <div class="stat-card" id="statFiltered">
-      <div class="stat-icon">🔎</div>
-      <div class="stat-val" id="sFiltered">–</div>
-      <div class="stat-label">Matched</div>
-    </div>
-
-    <div class="stat-card clickable" onclick="showPriceStats()">
-      <div class="stat-icon">💰</div>
-      <div class="stat-val" id="sAvgPrice">–</div>
-      <div class="stat-label">Avg Price</div>
-    </div>
-
-    <div class="stat-card clickable" onclick="cycleStat()">
-      <div class="stat-icon" id="cycleIcon">🏭</div>
-      <div class="stat-val" id="sCycleVal">–</div>
-      <div class="stat-label" id="sCycleLabel">Suppliers</div>
-    </div>
-  </div>
-
-  <section class="filters-section">
-    <div class="filters-scroll">
-      <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
-      <button class="filter-btn" data-filter="classification:Conventional Medicines" onclick="setFilter('classification:Conventional Medicines', this)">💊 Conventional</button>
-      <button class="filter-btn" data-filter="classification:Biological Medicines" onclick="setFilter('classification:Biological Medicines', this)">🧬 Biological</button>
-      <button class="filter-btn" data-filter="classification:Medical Devices for Humans" onclick="setFilter('classification:Medical Devices for Humans', this)">🩺 Medical Devices</button>
-      <button class="filter-btn" data-filter="classification:GSL Products" onclick="setFilter('classification:GSL Products', this)">🏪 GSL</button>
-      <button class="filter-btn" data-filter="classification:Natural Source Medicines" onclick="setFilter('classification:Natural Source Medicines', this)">🌿 Natural</button>
-      <button class="filter-btn" data-filter="dispensing:Prescription Only Medicine (POM)" onclick="setFilter('dispensing:Prescription Only Medicine (POM)', this)">📋 POM</button>
-      <button class="filter-btn" data-filter="dispensing:Controlled Drug-CD" onclick="setFilter('dispensing:Controlled Drug-CD', this)">🔒 Controlled</button>
-      <button class="filter-btn" data-filter="dispensing:HOSPITAL USE ONLY" onclick="setFilter('dispensing:HOSPITAL USE ONLY', this)">🏥 Hospital Only</button>
-    </div>
-  </section>
-
-  <div class="adv-filter-toggle" onclick="toggleAdvFilters()">
-    <span id="advToggleIcon">▼</span>
-    Advanced Filters
-    <span class="adv-badge hidden" id="advBadge">0 active</span>
-  </div>
-
-  <div id="advFilters" class="adv-filters hidden">
-    <div class="adv-row">
-      <div class="adv-group">
-        <label>Form</label>
-        <select id="filterForm" onchange="applyAdvFilters()">
-          <option value="">All Forms</option>
-        </select>
-      </div>
-      <div class="adv-group">
-        <label>Body System</label>
-        <select id="filterBody" onchange="applyAdvFilters()">
-          <option value="">All Body Systems</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="adv-row">
-      <div class="adv-group">
-        <label>Country</label>
-        <select id="filterCountry" onchange="applyAdvFilters()">
-          <option value="">All Countries</option>
-        </select>
-      </div>
-      <div class="adv-group">
-        <label>Price</label>
-        <select id="filterPrice" onchange="applyAdvFilters()">
-          <option value="">All Prices</option>
-          <option value="0-50">0–50 AED</option>
-          <option value="50-200">50–200 AED</option>
-          <option value="200-500">200–500 AED</option>
-          <option value="500+">500+ AED</option>
-          <option value="exempt">Exempt</option>
-        </select>
-      </div>
-    </div>
-
-    <button class="clear-adv-btn" onclick="clearAdvFilters()">Clear All Filters</button>
-  </div>
-
-  <div class="sort-bar">
-    <span class="sort-label">Sort:</span>
-    <button class="sort-btn active" onclick="setSort('name', this)">Name</button>
-    <button class="sort-btn" onclick="setSort('price', this)">Price</button>
-    <button class="sort-btn" onclick="setSort('date', this)">Date</button>
-    <div class="sort-dir-btn" id="sortDirBtn" onclick="toggleSortDir()">↑</div>
-    <div class="result-count" id="resultCount">Showing 0</div>
-  </div>
-
-  <div class="product-grid" id="productGrid"></div>
-
-  <div class="load-more-wrap" id="loadMoreWrap">
-    <button class="load-more-btn" id="loadMoreBtn" onclick="loadMore()">Load More Products</button>
-  </div>
-
-  <div class="empty-state hidden" id="emptyState">
-    <div class="empty-icon">📭</div>
-    <div class="empty-title">No products found</div>
-    <div class="empty-sub">No products match your current filters.</div>
-    <button class="empty-reset" onclick="resetAll()">Reset All</button>
-  </div>
-</div>
-
-<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal-card" id="modalCard">
-    <button class="modal-close" onclick="closeModalBtn()">✕</button>
-
-    <div class="modal-header">
-      <div class="modal-classification" id="mClass"></div>
-      <h2 class="modal-title" id="mTitle"></h2>
-      <div class="modal-tags" id="mTags"></div>
-    </div>
-
-    <div class="modal-grid">
-      <div class="detail-widget price-widget">
-        <div class="widget-label">Price</div>
-        <div class="widget-val price-val" id="mPrice"></div>
-      </div>
-      <div class="detail-widget">
-        <div class="widget-label">Pack Size</div>
-        <div class="widget-val" id="mPack"></div>
-      </div>
-      <div class="detail-widget">
-        <div class="widget-label">Strength</div>
-        <div class="widget-val" id="mStrength"></div>
-      </div>
-      <div class="detail-widget">
-        <div class="widget-label">Form</div>
-        <div class="widget-val" id="mForm"></div>
-      </div>
-    </div>
-
-    <div class="detail-section">
-      <div class="section-header">Ingredient</div>
-      <div class="section-body ingredient-body" id="mIngredient"></div>
-    </div>
-
-    <div class="detail-section">
-      <div class="section-header">Supplier</div>
-      <div class="section-body">
-        <div class="info-row">
-          <span class="info-label">Name</span>
-          <span class="info-val" id="mSupplier"></span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Address</span>
-          <span class="info-val" id="mSupplierAddr"></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="detail-section">
-      <div class="section-header">Manufacturer</div>
-      <div class="section-body">
-        <div class="info-row">
-          <span class="info-label">Manufacturer</span>
-          <span class="info-val" id="mMfr"></span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Country of Origin</span>
-          <span class="info-val" id="mCountry"></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="detail-section">
-      <div class="section-header">Registry Information</div>
-      <div class="section-body">
-        <div class="info-row">
-          <span class="info-label">Classification</span>
-          <span class="info-val" id="mClassification"></span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Body System</span>
-          <span class="info-val" id="mBodySystem"></span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Dispensing Mode</span>
-          <span class="info-val dispense-val" id="mDispensing"></span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Therapeutic Group</span>
-          <span class="info-val" id="mTherapeutic"></span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Registered Since</span>
-          <span class="info-val" id="mRegDate"></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-footer">
-      <button class="footer-btn" onclick="copyDetails()">📋 Copy Details</button>
-      <button class="footer-btn primary" onclick="closeModalBtn()">Done</button>
-    </div>
-  </div>
-</div>
-
-<script src="data.js"></script>
-<script src="app.js"></script>
-</body>
-</html>
+// Call this when data loads:
+// updateProductCount(totalProducts, filteredProducts);
