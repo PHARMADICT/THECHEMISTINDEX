@@ -1,7 +1,5 @@
-/* =====================================================
-   MOHAP MedCheck PWA — Soft Blue Fintech Theme
-   ===================================================== */
-
+<div class="header-title">THE INDEX</div>
+<div class="header-sub">by Vysakh</div>
 :root {
   --primary: #2D6CDF;
   --primary-light: #4C84FF;
@@ -48,7 +46,11 @@
 
 html, body {
   font-family: 'Cairo', 'Tajawal', sans-serif;
-  background: linear-gradient(180deg, var(--bg-main), var(--bg-soft));
+  background-image: url('image_9a4012.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--text-main);
   min-height: 100vh;
   overscroll-behavior: none;
