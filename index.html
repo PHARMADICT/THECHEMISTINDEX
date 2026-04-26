@@ -1,39 +1,48 @@
-// Update product count display
-function updateProductCount(total, filtered) {
-  const countNum = document.getElementById('countNum');
-  const productCount = document.getElementById('productCount');
-  
-  if (countNum) {
-    // Animate the number change
-    const currentCount = parseInt(countNum.textContent) || 0;
-    const targetCount = total || 0;
-    animateCount(countNum, currentCount, targetCount);
-  }
-  
-  // Update stat cards
-  document.getElementById('sTotal').textContent = total ? total.toLocaleString() : '–';
-  document.getElementById('sFiltered').textContent = filtered ? filtered.toLocaleString() : '–';
-}
+<header class="app-header">
+  <div class="header-glass">
+    <div class="header-inner">
+      <div class="header-center">
+        <div class="logo-ring">
+          <svg class="header-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="14" stroke="#64FFDA" stroke-width="1.8" opacity=".9"/>
+            <path d="M16 7v18M7 16h18" stroke="#64FFDA" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="16" cy="16" r="3.5" fill="#64FFDA"/>
+            <circle cx="16" cy="16" r="3.5" fill="#64FFDA" opacity=".4">
+              <animate attributeName="r" values="3.5;8;3.5" dur="2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values=".4;0;.4" dur="2s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+        <div class="title-block">
+          <h1 class="header-title">Chemist<span class="title-dot">.</span>index</h1>
+          <div class="header-divider"></div>
+          <p class="header-credit">Created by a pharmacist for pharmacists</p>
+          <p class="header-author">VYSAKH CHANDRAN <span class="author-badge">PHARMACIST-BOOTS</span></p>
+        </div>
+        <div class="product-count" id="productCount">
+          <span class="count-number" id="countNum">0</span>
+          <span class="count-label">Registered Products</span>
+        </div>
+      </div>
+    </div>
+    <div class="glass-shine"></div>
+  </div>
 
-// Smooth number animation
-function animateCount(element, start, end) {
-  const duration = 800;
-  const startTime = performance.now();
-  
-  function update(currentTime) {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3); // ease-out
-    const current = Math.floor(start + (end - start) * eased);
-    element.textContent = current.toLocaleString();
-    
-    if (progress < 1) {
-      requestAnimationFrame(update);
-    }
-  }
-  
-  requestAnimationFrame(update);
-}
-
-// Call this when data loads:
-// updateProductCount(totalProducts, filteredProducts);
+  <section class="search-section">
+    <div class="search-wrap glass-input">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="search"
+        id="searchInput"
+        class="search-input"
+        placeholder="Search by name, ingredient, supplier..."
+        autocomplete="off"
+        autocorrect="off"
+      >
+      <button class="search-clear hidden" id="searchClear">✕</button>
+    </div>
+  </section>
+</header>
